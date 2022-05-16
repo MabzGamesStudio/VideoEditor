@@ -5,6 +5,8 @@ public class CameraCapture : MonoBehaviour
 {
 	public int fileCounter;
 	public KeyCode screenshotKey;
+	public string saveLocation;
+	public string saveName;
 	private Camera Camera
 	{
 		get
@@ -22,7 +24,7 @@ public class CameraCapture : MonoBehaviour
 	{
 		if (Input.GetKeyDown(screenshotKey))
 		{
-			Capture();
+			//Capture();
 		}
 	}
 
@@ -42,7 +44,7 @@ public class CameraCapture : MonoBehaviour
 		byte[] bytes = image.EncodeToPNG();
 		Destroy(image);
 
-		File.WriteAllBytes(Application.dataPath + "/Backgrounds/" + fileCounter + ".png", bytes);
+		File.WriteAllBytes(Application.dataPath + "/" + saveLocation + "/" + saveName + fileCounter + ".png", bytes);
 		fileCounter++;
 	}
 }

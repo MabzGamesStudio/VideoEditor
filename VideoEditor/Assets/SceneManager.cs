@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Diagnostics;
 
 public class SceneManager : MonoBehaviour
 {
@@ -22,11 +23,26 @@ public class SceneManager : MonoBehaviour
 	{
 		if (Input.GetKeyDown(KeyCode.Space))
 		{
+			circle.transform.localPosition = new Vector3(0, 0, 0);
 			cameraCapture.Capture();
-			circle.transform.localPosition = new Vector3(2, 0, 0);
+			circle.transform.localPosition = new Vector3(1, 0, 0);
 			cameraCapture.Capture();
-			circle.transform.localPosition = new Vector3(4, 0, 0);
+			circle.transform.localPosition = new Vector3(1, 1, 0);
 			cameraCapture.Capture();
+			circle.transform.localPosition = new Vector3(0, 1, 0);
+			cameraCapture.Capture();
+			circle.transform.localPosition = new Vector3(-1, 1, 0);
+			cameraCapture.Capture();
+			circle.transform.localPosition = new Vector3(-1, 0, 0);
+			cameraCapture.Capture();
+
+			//Process process = new Process();
+			//process.StartInfo.FileName = Application.dataPath;
+			//string command = "\"Hello World!\" > thing.txt";
+
+			//process.Start("thing.exe", command);
+
+			//process.Close();
 		}
 	}
 }

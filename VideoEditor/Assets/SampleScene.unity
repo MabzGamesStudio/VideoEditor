@@ -320,6 +320,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fileCounter: 0
   screenshotKey: 99
+  saveLocation: ImageFrames
+  saveName: Circle
 --- !u!20 &987373238
 Camera:
   m_ObjectHideFlags: 0
