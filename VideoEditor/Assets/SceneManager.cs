@@ -36,13 +36,52 @@ public class SceneManager : MonoBehaviour
 			circle.transform.localPosition = new Vector3(-1, 0, 0);
 			cameraCapture.Capture();
 
-			//Process process = new Process();
-			//process.StartInfo.FileName = Application.dataPath;
-			//string command = "\"Hello World!\" > thing.txt";
 
-			//process.Start("thing.exe", command);
+			Process process = new Process();
+			process.StartInfo = new ProcessStartInfo();
+			process.StartInfo.WindowStyle = ProcessWindowStyle.Normal;
+			process.StartInfo.UseShellExecute = false;
+			process.StartInfo.FileName = Application.dataPath + "/ffmpeg";
 
-			//process.Close();
+
+			process.StartInfo.UseShellExecute = false;
+			process.StartInfo.RedirectStandardOutput = true;
+			process.StartInfo.RedirectStandardError = true;
+
+
+
+			UnityEngine.Debug.Log(process.StartInfo.FileName);
+
+			process.StartInfo.Arguments = "-r 1 -i " +
+				CommandLineDirectoryNoSpaces(Application.dataPath) +
+				"/ImageFrames/Circle%01d.png -s 256x256 -framerate 1/2 " +
+				CommandLineDirectoryNoSpaces(Application.dataPath) +
+				"/ImageFrames/CircleAnimation.mp4";
+
+			UnityEngine.Debug.Log("Argument: " + process.StartInfo.Arguments);
+
+			process.Start();
+
+			System.IO.StreamReader thing = process.StandardOutput;
+			System.IO.StreamReader thing2 = process.StandardError;
+
+
+			UnityEngine.Debug.Log("Standard Out: " + thing.ReadToEnd());
+			UnityEngine.Debug.Log("Error Out: " + thing2.ReadToEnd());
+
+			process.WaitForExit();
+
+
+
+			UnityEngine.Debug.Log(thing.ReadToEnd());
+
 		}
+
+	}
+
+	private string CommandLineDirectoryNoSpaces(string directory)
+	{
+		UnityEngine.Debug.Log(directory.Replace(" ", "'  '"));
+		return directory.Replace(" ", "' '");
 	}
 }
