@@ -37,7 +37,7 @@ public class SceneManager : MonoBehaviour
 			cameraCapture.Capture();
 
 
-			AnimationComputer.ComputeAnimation("ImageFrames", "Circle", new Vector2Int(256, 256), 1, 5);
+			//AnimationComputer.ComputeAnimation("ImageFrames", "Circle", new Vector2Int(256, 256), 1, 5);
 
 		}
 

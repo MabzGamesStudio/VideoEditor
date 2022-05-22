@@ -14,7 +14,8 @@ public class AnimationComputer
 	/// <param name="dimensions">How many pixels wide and tall each frame is (width, height)</param>
 	/// <param name="framerate">Number of frames per second to make the animation</param>
 	/// <param name="numFrames">The total number of frames in the folder</param>
-	public static void ComputeAnimation(string path, string animationName, Vector2Int dimensions, int framerate, int numFrames)
+	/// <param name="bitrate">The number of Mega bits per second (higher is better, 8 is good for 1080p video)</param>
+	public static void ComputeAnimation(string path, string animationName, Vector2Int dimensions, int framerate, int numFrames, int bitrate)
 	{
 
 		Process process = new Process();
@@ -27,18 +28,20 @@ public class AnimationComputer
 		process.StartInfo.RedirectStandardOutput = true;
 		process.StartInfo.RedirectStandardError = true;
 
-		string frameProcess = "-r 1 ";
+		string frameProcess = "-r " + framerate + " ";
 		string framesPath = "-i " + Application.dataPath.Replace(" ", "' '") + "/" + path + "/";
-		string frameNames = animationName + "%0" + Mathf.Ceil(numFrames / 10f) + "d.png ";
+		string frameNames = animationName + "%0" + Mathf.Ceil(Mathf.Log10(numFrames)) + "d.png ";
 		string frameSize = "-s " + dimensions.x.ToString() + "x" + dimensions.y.ToString() + " ";
+		string frameBitrate = "-b:v " + bitrate.ToString() + "M ";
 		string framesPerSecond = "-framerate " + framerate.ToString() + " ";
 		string animationOutput = Application.dataPath.Replace(" ", "' '") + "/" + path + "/" + animationName + "Animation.mp4";
 
-		string fullArgument = frameProcess + framesPath + frameNames + frameSize + framesPerSecond + animationOutput;
+		string fullArgument = frameProcess + framesPath + frameNames + frameSize + frameBitrate + framesPerSecond + animationOutput;
 
 		process.StartInfo.Arguments = fullArgument;
 
 		process.Start();
+
 		process.WaitForExit();
 	}
 

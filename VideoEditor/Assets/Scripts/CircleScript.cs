@@ -2,51 +2,38 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CircleScript : MonoBehaviour
+public class CircleScript : Element
 {
 
-	private Action action;
+	public Vector2 startPosition;
 
-	private bool actionGoing;
-	private float actionTime;
+	public Vector2 endPosition;
 
-	// Start is called before the first frame update
-	void Start()
+	public float waitStart;
+
+	public float moveTime;
+
+	public float waitEnd;
+
+	public float colorWait;
+
+	public Color colorStart;
+
+	public Color colorEnd;
+
+	public float colorTransitionTime;
+
+	public override void InitialElement()
 	{
 
-		Path path1 = new StillPath(new Vector2(0, 0));
-		Path path2 = new LinearPath(new Vector2(0, 0), new Vector2(3, 1));
+		movement = new ActionMovement()
+			.AddAction(new StillPath(startPosition), new ConstantProgression(waitStart))
+			.AddAction(new LinearPath(startPosition, endPosition), new ConstantProgression(moveTime))
+			.AddAction(new StillPath(endPosition), new ConstantProgression(waitEnd));
 
-		Movement movement1 = new ConstantMovement(1);
-		Movement movement2 = new ConstantMovement(2);
-
-		action = new Action()
-			.AddAction(path1, movement1)
-			.AddAction(path2, movement2);
+		colorTransition = new ActionColor()
+			.AddAction(colorStart, colorWait)
+			.AddAction(colorStart, colorEnd, new ConstantProgression(colorTransitionTime));
 	}
 
-	private void ShowAction()
-	{
-		actionGoing = true;
-		actionTime = 0;
-	}
-
-	// Update is called once per frame
-	void Update()
-	{
-		if (actionGoing)
-		{
-			actionTime += Time.deltaTime;
-			transform.localPosition = action.GetElementPosition(actionTime);
-			if (action.ActionComplete(actionTime))
-			{
-				actionGoing = false;
-			}
-		}
-
-		if (Input.GetKeyDown(KeyCode.P))
-		{
-			ShowAction();
-		}
-	}
 }

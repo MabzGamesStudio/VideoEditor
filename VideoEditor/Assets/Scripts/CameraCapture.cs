@@ -7,6 +7,11 @@ public class CameraCapture : MonoBehaviour
 	public KeyCode screenshotKey;
 	public string saveLocation;
 	public string saveName;
+
+	public int paddingDigits;
+
+	private Vector2Int textureDimentions;
+
 	private Camera Camera
 	{
 		get
@@ -28,6 +33,11 @@ public class CameraCapture : MonoBehaviour
 		}
 	}
 
+	public void SetDimensions(Vector2Int newDimension)
+	{
+		Camera.targetTexture = new RenderTexture(newDimension.x, newDimension.y, 24);
+	}
+
 	public void Capture()
 	{
 
@@ -44,7 +54,15 @@ public class CameraCapture : MonoBehaviour
 		byte[] bytes = image.EncodeToPNG();
 		Destroy(image);
 
-		File.WriteAllBytes(Application.dataPath + "/" + saveLocation + "/" + saveName + fileCounter + ".png", bytes);
+		string paddedFileCounter = "";
+		for (int i = fileCounter.ToString().Length; i < paddingDigits; i++)
+		{
+			paddedFileCounter += "0";
+		}
+		paddedFileCounter += fileCounter.ToString();
+
+
+		File.WriteAllBytes(Application.dataPath + "/" + saveLocation + "/" + saveName + paddedFileCounter + ".png", bytes);
 		fileCounter++;
 	}
 }
