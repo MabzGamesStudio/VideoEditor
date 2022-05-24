@@ -227,6 +227,7 @@ MonoBehaviour:
   colorStart: {r: 1, g: 0, b: 0, a: 1}
   colorEnd: {r: 0, g: 0, b: 1, a: 1}
   colorTransitionTime: 1
+  centerZoom: 1
 --- !u!1 &714502931
 GameObject:
   m_ObjectHideFlags: 0
@@ -503,8 +504,9 @@ MonoBehaviour:
   waitEnd: 0.5
   colorWait: 0.5
   colorStart: {r: 0, g: 1, b: 0, a: 1}
-  colorEnd: {r: 0, g: 1, b: 0, a: 0}
+  colorEnd: {r: 1, g: 0, b: 1, a: 1}
   colorTransitionTime: 2
+  centerZoom: 1
 --- !u!212 &1181664748
 SpriteRenderer:
   m_ObjectHideFlags: 0

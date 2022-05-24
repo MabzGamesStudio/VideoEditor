@@ -186,4 +186,154 @@ public class ActionColor : IAction
 
 		return Color.black;
 	}
+
+}
+
+
+public class ActionZoom : IAction
+{
+	List<IProgression> widthProgressions;
+	List<IProgression> heightProgressions;
+	List<float> transitionTimes;
+
+	List<Vector2> startSizes;
+	List<Vector2> endSizes;
+	List<Vector2> pivotPositions;
+
+	float totalMoveTime;
+
+	public ActionZoom()
+	{
+		totalMoveTime = 0;
+		widthProgressions = new List<IProgression>();
+		heightProgressions = new List<IProgression>();
+		transitionTimes = new List<float>();
+		startSizes = new List<Vector2>();
+		endSizes = new List<Vector2>();
+		pivotPositions = new List<Vector2>();
+	}
+
+	public ActionZoom(Vector2 startSize, Vector2 endSize, IProgression progression)
+	{
+		totalMoveTime = 0;
+		widthProgressions = new List<IProgression>();
+		heightProgressions = new List<IProgression>();
+		widthProgressions.Add(progression);
+		heightProgressions.Add(progression);
+		transitionTimes = new List<float>();
+		transitionTimes.Add(progression.GetProgressionTime());
+		startSizes.Add(startSize);
+		endSizes.Add(endSize);
+		pivotPositions.Add(new Vector2(0, 0));
+	}
+
+	public ActionZoom(Vector2 startSize, Vector2 endSize, IProgression widthProgression, IProgression heightProgression, Vector2 pivotPosition)
+	{
+		totalMoveTime = 0;
+		widthProgressions = new List<IProgression>();
+		heightProgressions = new List<IProgression>();
+		widthProgressions.Add(widthProgression);
+		heightProgressions.Add(heightProgression);
+		transitionTimes = new List<float>();
+		transitionTimes.Add(Mathf.Max(widthProgression.GetProgressionTime(), heightProgression.GetProgressionTime()));
+		startSizes.Add(startSize);
+		endSizes.Add(endSize);
+		pivotPositions.Add(pivotPosition);
+	}
+
+	public ActionZoom AddAction(Vector2 startSize, Vector2 endSize, IProgression progression)
+	{
+		widthProgressions = new List<IProgression>();
+		heightProgressions = new List<IProgression>();
+		widthProgressions.Add(progression);
+		heightProgressions.Add(progression);
+		transitionTimes = new List<float>();
+		transitionTimes.Add(progression.GetProgressionTime());
+		startSizes.Add(startSize);
+		endSizes.Add(endSize);
+		pivotPositions.Add(new Vector2(0, 0));
+
+		totalMoveTime += transitionTimes[transitionTimes.Count - 1];
+		return this;
+	}
+
+	public ActionZoom AddAction(Vector2 startSize, Vector2 endSize, IProgression widthProgression, IProgression heightProgression, Vector2 pivotPosition)
+	{
+		widthProgressions = new List<IProgression>();
+		heightProgressions = new List<IProgression>();
+		widthProgressions.Add(widthProgression);
+		heightProgressions.Add(heightProgression);
+		transitionTimes = new List<float>();
+		transitionTimes.Add(Mathf.Max(widthProgression.GetProgressionTime(), heightProgression.GetProgressionTime()));
+		startSizes.Add(startSize);
+		endSizes.Add(endSize);
+		pivotPositions.Add(pivotPosition);
+
+		totalMoveTime += transitionTimes[transitionTimes.Count - 1];
+		return this;
+	}
+
+	public bool ActionComplete(float time)
+	{
+		return totalMoveTime <= time;
+	}
+
+	public float TotalActionTime()
+	{
+		return totalMoveTime;
+	}
+
+	public Vector2 GetPivotPosition(float time)
+	{
+		float pivotTime = time;
+
+		if (pivotTime < 0)
+		{
+			return pivotPositions[0];
+		}
+		if (pivotTime > totalMoveTime)
+		{
+			return pivotPositions[pivotPositions.Count - 1];
+		}
+
+		for (int i = 0; i < transitionTimes.Count; i++)
+		{
+			if (transitionTimes[i] > pivotTime)
+			{
+				return pivotPositions[i];
+			}
+			pivotTime -= transitionTimes[i];
+		}
+
+		return new Vector2(0, 0);
+	}
+
+	public Vector2 GetElementSize(float time)
+	{
+		float pivotTime = time;
+
+		if (pivotTime < 0)
+		{
+			return startSizes[0];
+		}
+		if (pivotTime > totalMoveTime)
+		{
+			return endSizes[endSizes.Count - 1];
+		}
+
+		for (int i = 0; i < transitionTimes.Count; i++)
+		{
+			if (transitionTimes[i] > pivotTime)
+			{
+				float widthPercent = widthProgressions[i].GetProgressionPercent(pivotTime);
+				float heightPercent = heightProgressions[i].GetProgressionPercent(pivotTime);
+				float width = startSizes[i].x * (1 - widthPercent) + endSizes[i].x * widthPercent;
+				float height = startSizes[i].y * (1 - heightPercent) + endSizes[i].y * heightPercent;
+				return new Vector2(width, height);
+			}
+			pivotTime -= transitionTimes[i];
+		}
+
+		return new Vector2(0, 0);
+	}
 }
