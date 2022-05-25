@@ -243,11 +243,8 @@ public class ActionZoom : IAction
 
 	public ActionZoom AddAction(Vector2 startSize, Vector2 endSize, IProgression progression)
 	{
-		widthProgressions = new List<IProgression>();
-		heightProgressions = new List<IProgression>();
 		widthProgressions.Add(progression);
 		heightProgressions.Add(progression);
-		transitionTimes = new List<float>();
 		transitionTimes.Add(progression.GetProgressionTime());
 		startSizes.Add(startSize);
 		endSizes.Add(endSize);
@@ -259,11 +256,8 @@ public class ActionZoom : IAction
 
 	public ActionZoom AddAction(Vector2 startSize, Vector2 endSize, IProgression widthProgression, IProgression heightProgression, Vector2 pivotPosition)
 	{
-		widthProgressions = new List<IProgression>();
-		heightProgressions = new List<IProgression>();
 		widthProgressions.Add(widthProgression);
 		heightProgressions.Add(heightProgression);
-		transitionTimes = new List<float>();
 		transitionTimes.Add(Mathf.Max(widthProgression.GetProgressionTime(), heightProgression.GetProgressionTime()));
 		startSizes.Add(startSize);
 		endSizes.Add(endSize);
@@ -335,5 +329,136 @@ public class ActionZoom : IAction
 		}
 
 		return new Vector2(0, 0);
+	}
+}
+
+public class ActionRotate : IAction
+{
+	List<IProgression> progressions;
+	List<float> transitionTimes;
+
+	List<float> startRotations;
+	List<float> endRotations;
+	List<Vector2> pivotPositions;
+
+	float totalMoveTime;
+
+	public ActionRotate()
+	{
+		totalMoveTime = 0;
+		progressions = new List<IProgression>();
+		transitionTimes = new List<float>();
+		startRotations = new List<float>();
+		endRotations = new List<float>();
+		pivotPositions = new List<Vector2>();
+	}
+
+	public ActionRotate(float startRotation, float endRotation, IProgression progression)
+	{
+		totalMoveTime = 0;
+		progressions = new List<IProgression>();
+		progressions.Add(progression);
+		transitionTimes = new List<float>();
+		transitionTimes.Add(progression.GetProgressionTime());
+		startRotations.Add(startRotation);
+		endRotations.Add(endRotation);
+		pivotPositions.Add(new Vector2(0, 0));
+	}
+
+	public ActionRotate(float startRotation, float endRotation, IProgression progression, Vector2 pivotPosition)
+	{
+		totalMoveTime = 0;
+		progressions = new List<IProgression>();
+		progressions.Add(progression);
+		transitionTimes = new List<float>();
+		progression.GetProgressionTime();
+		startRotations.Add(startRotation);
+		startRotations.Add(endRotation);
+		pivotPositions.Add(pivotPosition);
+	}
+
+	public ActionRotate AddAction(float startRotation, float endRotation, IProgression progression)
+	{
+		progressions.Add(progression);
+		transitionTimes.Add(progression.GetProgressionTime());
+		startRotations.Add(startRotation);
+		endRotations.Add(endRotation);
+		pivotPositions.Add(new Vector2(0, 0));
+
+		totalMoveTime += transitionTimes[transitionTimes.Count - 1];
+		return this;
+	}
+
+	public ActionRotate AddAction(float startRotation, float endRotation, IProgression progression, Vector2 pivotPosition)
+	{
+		progressions.Add(progression);
+		transitionTimes.Add(progression.GetProgressionTime());
+		startRotations.Add(startRotation);
+		endRotations.Add(endRotation);
+		pivotPositions.Add(pivotPosition);
+
+		totalMoveTime += transitionTimes[transitionTimes.Count - 1];
+		return this;
+	}
+
+	public bool ActionComplete(float time)
+	{
+		return totalMoveTime <= time;
+	}
+
+	public float TotalActionTime()
+	{
+		return totalMoveTime;
+	}
+
+	public Vector2 GetPivotPosition(float time)
+	{
+		float pivotTime = time;
+
+		if (pivotTime < 0)
+		{
+			return pivotPositions[0];
+		}
+		if (pivotTime > totalMoveTime)
+		{
+			return pivotPositions[pivotPositions.Count - 1];
+		}
+
+		for (int i = 0; i < transitionTimes.Count; i++)
+		{
+			if (transitionTimes[i] > pivotTime)
+			{
+				return pivotPositions[i];
+			}
+			pivotTime -= transitionTimes[i];
+		}
+
+		return new Vector2(0, 0);
+	}
+
+	public float GetElementRotation(float time)
+	{
+		float pivotTime = time;
+
+		if (pivotTime < 0)
+		{
+			return startRotations[0];
+		}
+		if (pivotTime > totalMoveTime)
+		{
+			return endRotations[endRotations.Count - 1];
+		}
+
+		for (int i = 0; i < transitionTimes.Count; i++)
+		{
+			if (transitionTimes[i] > pivotTime)
+			{
+				float rotationPercent = progressions[i].GetProgressionPercent(pivotTime);
+				return startRotations[i] * (1 - rotationPercent) + endRotations[i] * rotationPercent;
+			}
+			pivotTime -= transitionTimes[i];
+		}
+
+		return 0;
 	}
 }

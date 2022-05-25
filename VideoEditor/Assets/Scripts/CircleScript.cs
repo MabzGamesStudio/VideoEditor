@@ -37,23 +37,16 @@ public class CircleScript : Element
 			.AddAction(colorStart, colorWait)
 			.AddAction(colorStart, colorEnd, new ConstantProgression(colorTransitionTime));
 
-		Vector2 zoomPivot;
-		if (centerZoom)
-		{
-			zoomPivot = new Vector2(0, 0);
-		}
-		else
-		{
-			zoomPivot = new Vector2(-.5f, -.5f);
-		}
 
 		zoomTransition = new ActionZoom()
 			.AddAction(new Vector2(1, 1),
-			new Vector2(2, 2),
+			new Vector2(1, 2),
 			new ConstantProgression(3),
 			new ConstantProgression(3),
-			zoomPivot);
+			new Vector2(0f, 0f));
 
+		rotateTransition = new ActionRotate()
+			.AddAction(0, 180, new ConstantProgression(1), new Vector2(0, 1f));
 	}
 
 }
