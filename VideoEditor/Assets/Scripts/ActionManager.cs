@@ -5,12 +5,11 @@ using UnityEngine;
 public class ActionManager : MonoBehaviour
 {
 
+	public VideoPreviewSettings videoPreviewSettings;
+
 	List<Element> elements;
 
-	public Element circle1;
-	public Element circle2;
-
-	bool actionGoing;
+	bool actionPlaying;
 
 	float actionTime;
 
@@ -34,6 +33,14 @@ public class ActionManager : MonoBehaviour
 	}
 	private float _totalActionTime = -1;
 
+	private int TotalFrames
+	{
+		get
+		{
+			return Mathf.RoundToInt(fps * TotalActionTime);
+		}
+	}
+
 	public int fps;
 
 	public Vector2Int frameDimensions;
@@ -42,40 +49,47 @@ public class ActionManager : MonoBehaviour
 
 	public int megaBitrate;
 
-	// Start is called before the first frame update
-	void Start()
+	private float playSpeed = 1f;
+
+	public void SetElements(List<Element> elements)
 	{
-
-		elements = new List<Element>();
-		elements.Add(circle1);
-		elements.Add(circle2);
-
+		this.elements = elements;
+		SetActionProgress(0f);
 	}
 
-	private void ShowAction()
+	public bool GetActionPlaying()
 	{
-		actionGoing = true;
-		actionTime = 0;
+		return actionPlaying;
 	}
 
+	public bool AtActionEnd()
+	{
+		return actionTime == TotalActionTime;
+	}
 
+	public void PauseAction()
+	{
+		actionPlaying = false;
+	}
 
-	private void SaveAction()
+	public void PlayAction()
+	{
+		actionPlaying = true;
+	}
+
+	public void SaveAction()
 	{
 
 		float videoTime = 0;
-		int totalFrames = Mathf.RoundToInt(fps * TotalActionTime);
 
 		cameraCapture.SetDimensions(frameDimensions);
 
-		for (int i = 0; i < totalFrames; i++)
+		for (int i = 0; i < TotalFrames; i++)
 		{
 			for (int j = 0; j < elements.Count; j++)
 			{
 				elements[j].UpdateElement(videoTime);
 			}
-
-
 
 			cameraCapture.Capture();
 
@@ -83,36 +97,128 @@ public class ActionManager : MonoBehaviour
 		}
 
 
-		AnimationComputer.ComputeAnimation("VideoData", "CircleAnimation", frameDimensions, fps, totalFrames, megaBitrate);
+		AnimationComputer.ComputeAnimation("VideoData", "CircleAnimation", frameDimensions, fps, TotalFrames, megaBitrate);
 
+	}
+
+	public void SkipFrame(int numFrames)
+	{
+		actionTime += ((float)numFrames) / fps;
+		if (actionTime < 0)
+		{
+			actionTime = 0;
+		}
+		if (actionTime > TotalActionTime)
+		{
+			actionTime = TotalActionTime;
+		}
+		for (int i = 0; i < elements.Count; i++)
+		{
+			elements[i].UpdateElement(actionTime);
+		}
+
+		videoPreviewSettings.SetPreviewProgress(actionTime / TotalActionTime, TotalActionTime, TotalFrames);
+
+		if (actionTime == 0 && numFrames < 0)
+		{
+			videoPreviewSettings.ResetPreview(false);
+		}
+
+		if (actionTime == TotalActionTime && numFrames > 0)
+		{
+			videoPreviewSettings.ResetPreview(true);
+		}
+	}
+
+	public void SetPlaySpeed(float speed)
+	{
+		playSpeed = speed;
+	}
+
+	public void SetToStart()
+	{
+		actionTime = 0f;
+		videoPreviewSettings.SetPreviewProgress(actionTime / TotalActionTime, TotalActionTime, TotalFrames);
+	}
+
+	public void SetToEnd()
+	{
+		actionTime = TotalActionTime;
+		videoPreviewSettings.SetPreviewProgress(actionTime / TotalActionTime, TotalActionTime, TotalFrames);
 	}
 
 	// Update is called once per frame
 	void Update()
 	{
-		if (actionGoing)
+		if (actionPlaying)
 		{
-			actionTime += Time.deltaTime;
+			actionTime += Time.deltaTime * playSpeed;
+
+			if (actionTime < 0)
+			{
+				actionTime = 0f;
+			}
+
+			if (actionTime > TotalActionTime)
+			{
+				actionTime = TotalActionTime;
+			}
 
 			for (int i = 0; i < elements.Count; i++)
 			{
 				elements[i].UpdateElement(actionTime);
 			}
-			if (TotalActionTime < actionTime)
+
+			videoPreviewSettings.SetPreviewProgress(actionTime / TotalActionTime, TotalActionTime, TotalFrames);
+
+			if (actionTime == 0 && playSpeed < 0)
 			{
-				actionGoing = false;
+				actionPlaying = false;
+				videoPreviewSettings.ResetPreview(false);
+			}
+
+			if (actionTime == TotalActionTime && playSpeed > 0)
+			{
+				actionPlaying = false;
+				videoPreviewSettings.ResetPreview(true);
 			}
 		}
 
-		if (Input.GetKeyDown(KeyCode.P))
+	}
+
+	public void SetActionProgress(float progress)
+	{
+		actionTime = progress * TotalActionTime;
+		actionPlaying = false;
+		if (actionTime < 0f)
 		{
-			ShowAction();
+			actionTime = 0f;
 		}
 
-		if (Input.GetKeyDown(KeyCode.S))
+		if (actionTime > TotalActionTime)
 		{
-			SaveAction();
+			actionTime = TotalActionTime;
 		}
 
+		for (int i = 0; i < elements.Count; i++)
+		{
+			elements[i].UpdateElement(actionTime);
+		}
+
+		videoPreviewSettings.SetPreviewProgress(actionTime / TotalActionTime, TotalActionTime, TotalFrames);
+
+		Debug.Log(actionTime);
+
+		if (actionTime == 0f)
+		{
+			actionPlaying = false;
+			videoPreviewSettings.ResetPreview(false);
+		}
+
+		if (actionTime == TotalActionTime)
+		{
+			actionPlaying = false;
+			videoPreviewSettings.ResetPreview(true);
+		}
 	}
 }

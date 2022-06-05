@@ -61,11 +61,11 @@ public class ActionMovement : IAction
 	{
 		float moveTime = time;
 
-		if (moveTime < 0)
+		if (moveTime <= 0)
 		{
 			return paths[0].GetPosition(0f);
 		}
-		if (moveTime > totalMoveTime)
+		if (moveTime >= totalMoveTime)
 		{
 			return paths[paths.Count - 1].GetPosition(1f);
 		}
@@ -159,11 +159,11 @@ public class ActionColor : IAction
 	{
 		float moveTime = time;
 
-		if (moveTime < 0)
+		if (moveTime <= 0)
 		{
 			return startColors[0];
 		}
-		if (moveTime > totalMoveTime)
+		if (moveTime >= totalMoveTime)
 		{
 			return endColors[endColors.Count - 1];
 		}
@@ -281,11 +281,11 @@ public class ActionZoom : IAction
 	{
 		float pivotTime = time;
 
-		if (pivotTime < 0)
+		if (pivotTime <= 0)
 		{
 			return pivotPositions[0];
 		}
-		if (pivotTime > totalMoveTime)
+		if (pivotTime >= totalMoveTime)
 		{
 			return pivotPositions[pivotPositions.Count - 1];
 		}
@@ -306,11 +306,11 @@ public class ActionZoom : IAction
 	{
 		float pivotTime = time;
 
-		if (pivotTime < 0)
+		if (pivotTime <= 0)
 		{
 			return startSizes[0];
 		}
-		if (pivotTime > totalMoveTime)
+		if (pivotTime >= totalMoveTime)
 		{
 			return endSizes[endSizes.Count - 1];
 		}
@@ -328,7 +328,7 @@ public class ActionZoom : IAction
 			pivotTime -= transitionTimes[i];
 		}
 
-		return new Vector2(0, 0);
+		return new Vector2(1, 1);
 	}
 }
 
@@ -415,11 +415,11 @@ public class ActionRotate : IAction
 	{
 		float pivotTime = time;
 
-		if (pivotTime < 0)
+		if (pivotTime <= 0)
 		{
 			return pivotPositions[0];
 		}
-		if (pivotTime > totalMoveTime)
+		if (pivotTime >= totalMoveTime)
 		{
 			return pivotPositions[pivotPositions.Count - 1];
 		}
@@ -440,11 +440,11 @@ public class ActionRotate : IAction
 	{
 		float pivotTime = time;
 
-		if (pivotTime < 0)
+		if (pivotTime <= 0)
 		{
 			return startRotations[0];
 		}
-		if (pivotTime > totalMoveTime)
+		if (pivotTime >= totalMoveTime)
 		{
 			return endRotations[endRotations.Count - 1];
 		}
