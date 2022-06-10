@@ -29,24 +29,23 @@ public class CircleScript : Element
 	{
 
 		movement = new ActionMovement()
-			.AddAction(new StillPath(startPosition), new ConstantProgression(waitStart))
-			.AddAction(new LinearPath(startPosition, endPosition), new ConstantProgression(moveTime))
-			.AddAction(new StillPath(endPosition), new ConstantProgression(waitEnd));
-
-		colorTransition = new ActionColor()
-			.AddAction(colorStart, colorWait)
-			.AddAction(colorStart, colorEnd, new ConstantProgression(colorTransitionTime));
+			.AddAction(new LinearPath(startPosition, endPosition), new Rubberband(moveTime / 4f, moveTime));
 
 
-		zoomTransition = new ActionZoom()
-			.AddAction(new Vector2(1, 1),
-			new Vector2(1, 2),
-			new ConstantProgression(3),
-			new ConstantProgression(3),
-			new Vector2(0f, 0f));
+		//colorTransition = new ActionColor()
+		//	.AddAction(colorStart, colorWait)
+		//	.AddAction(colorStart, colorEnd, new ConstantProgression(colorTransitionTime));
 
-		rotateTransition = new ActionRotate()
-			.AddAction(0, 180, new ConstantProgression(1), new Vector2(0, 1f));
+
+		//zoomTransition = new ActionZoom()
+		//	.AddAction(new Vector2(1, 1),
+		//	new Vector2(1, 2),
+		//	new ConstantProgression(3),
+		//	new ConstantProgression(3),
+		//	new Vector2(0f, 0f));
+
+		//rotateTransition = new ActionRotate();
+		//.AddAction(0, 180, new ConstantProgression(1), new Vector2(0, 1f));
 	}
 
 }

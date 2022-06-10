@@ -207,8 +207,6 @@ public class ActionManager : MonoBehaviour
 
 		videoPreviewSettings.SetPreviewProgress(actionTime / TotalActionTime, TotalActionTime, TotalFrames);
 
-		Debug.Log(actionTime);
-
 		if (actionTime == 0f)
 		{
 			actionPlaying = false;

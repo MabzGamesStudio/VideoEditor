@@ -13,6 +13,8 @@ public abstract class Element : MonoBehaviour
 
 	protected ActionRotate rotateTransition;
 
+	private bool elementInitialized;
+
 	private GameObject ParentB
 	{
 		get
@@ -99,7 +101,12 @@ public abstract class Element : MonoBehaviour
 	// Start is called before the first frame update
 	void Start()
 	{
-		InitialElement();
+		if (!elementInitialized)
+		{
+			InitialElement();
+			elementInitialized = true;
+		}
+
 		if (movement != null)
 		{
 			transform.localPosition = movement.GetElementPosition(0f);
@@ -320,7 +327,15 @@ public abstract class Element : MonoBehaviour
 
 	public float GetTotalActionTime()
 	{
+
+		if (!elementInitialized)
+		{
+			InitialElement();
+			elementInitialized = true;
+		}
+
 		float maxTime = 0;
+
 		if (movement != null)
 		{
 			maxTime = Mathf.Max(maxTime, movement.TotalActionTime());

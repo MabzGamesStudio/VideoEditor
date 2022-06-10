@@ -11,9 +11,10 @@ public interface Path
 public enum PathType
 {
 	Still,
-	Linear
+	Linear,
+	ParametricFunction,
+	Function
 }
-
 
 public class StillPath : Path
 {
