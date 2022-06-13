@@ -84,6 +84,10 @@ public class ActionManager : MonoBehaviour
 
 		cameraCapture.SetDimensions(frameDimensions);
 
+		cameraCapture.paddingDigits = 1 + (int)Mathf.Log10(TotalFrames);
+
+		videoPreviewSettings.HidePreview();
+
 		for (int i = 0; i < TotalFrames; i++)
 		{
 			for (int j = 0; j < elements.Count; j++)
@@ -97,8 +101,10 @@ public class ActionManager : MonoBehaviour
 		}
 
 
+
 		AnimationComputer.ComputeAnimation("VideoData", "CircleAnimation", frameDimensions, fps, TotalFrames, megaBitrate);
 
+		videoPreviewSettings.ShowPreview();
 	}
 
 	public void SkipFrame(int numFrames)

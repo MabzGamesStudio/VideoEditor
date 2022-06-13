@@ -29,12 +29,12 @@ public class CircleScript : Element
 	{
 
 		movement = new ActionMovement()
-			.AddAction(new LinearPath(startPosition, endPosition), new Rubberband(moveTime / 4f, moveTime));
+			.AddAction(new LinearPath(startPosition, endPosition), new EaseInOut(moveTime / 4f, moveTime));
 
 
-		//colorTransition = new ActionColor()
-		//	.AddAction(colorStart, colorWait)
-		//	.AddAction(colorStart, colorEnd, new ConstantProgression(colorTransitionTime));
+		colorTransition = new ActionColor()
+			.AddAction(colorStart, colorWait)
+			.AddAction(colorStart, colorEnd, new ConstantProgression(colorTransitionTime));
 
 
 		//zoomTransition = new ActionZoom()
