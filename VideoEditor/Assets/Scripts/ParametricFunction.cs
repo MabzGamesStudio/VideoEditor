@@ -5,14 +5,34 @@ using UnityEngine;
 public class ParametricFunction : Path
 {
 
+	/// <summary>
+	/// x function parameter
+	/// </summary>
 	private Function xFunction;
+
+	/// <summary>
+	/// y function parameter
+	/// </summary>
 	private Function yFunction;
 
+	/// <summary>
+	/// t value to start at
+	/// </summary>
 	private float tStart;
 
+	/// <summary>
+	/// t value to end at
+	/// </summary>
 	private float tEnd;
 
-	public ParametricFunction(Function xFunction, Function yFunction, Vector2 tRange)
+	/// <summary>
+	/// Uses a parametric function to create a path
+	/// </summary>
+	/// <param name="xFunction">x function parameter</param>
+	/// <param name="yFunction">y function parameter</param>
+	/// <param name="tRange">Start and end t values</param>
+	public ParametricFunction(Function xFunction, Function yFunction,
+		Vector2 tRange)
 	{
 		this.xFunction = xFunction;
 		this.yFunction = yFunction;
@@ -20,11 +40,21 @@ public class ParametricFunction : Path
 		tEnd = tRange.y;
 	}
 
+	/// <summary>
+	/// Gets the ParametricFunction PathType
+	/// </summary>
+	/// <returns>ParametricFunction PathType enum</returns>
 	PathType Path.GetMovementType()
 	{
 		return PathType.ParametricFunction;
 	}
 
+	/// <summary>
+	/// Gets the position based on the parametric function and given percent
+	/// from 0 to 1
+	/// </summary>
+	/// <param name="percent">Progress through the path</param>
+	/// <returns>Position based on the parametric funciton</returns>
 	Vector2 Path.GetPosition(float percent)
 	{
 		float t = tStart * (1 - percent) + tEnd * percent;
@@ -33,4 +63,5 @@ public class ParametricFunction : Path
 		position.y = yFunction.GetY(t);
 		return position;
 	}
+
 }

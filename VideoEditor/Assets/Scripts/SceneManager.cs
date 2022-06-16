@@ -5,28 +5,35 @@ using UnityEngine;
 public class SceneManager : MonoBehaviour
 {
 
+	/// <summary>
+	/// Test circle 1
+	/// </summary>
 	public Element circle1;
+
+	/// <summary>
+	/// Test circle 2
+	/// </summary>
 	public Element circle2;
 
+	/// <summary>
+	/// The action manager script controls circle movements
+	/// </summary>
 	private ActionManager actionManager;
 
-	// Start is called before the first frame update
+	/// <summary>
+	/// On start initialize the action manager with the two circles actions
+	/// </summary>
 	void Start()
 	{
+
+		// Initialize action manager script
 		actionManager = GetComponent<ActionManager>();
 
+		// Set the action elements to the two circles
 		List<Element> elements = new List<Element>();
 		elements.Add(circle1);
 		elements.Add(circle2);
-
 		actionManager.SetElements(elements);
-
-	}
-
-	// Update is called once per frame
-	void Update()
-	{
-
 	}
 
 }

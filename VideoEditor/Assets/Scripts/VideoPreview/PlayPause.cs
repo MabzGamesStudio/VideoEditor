@@ -5,6 +5,7 @@ using UnityEngine;
 public class PlayPause : MonoBehaviour
 {
 
+
 	public VideoPreviewSettings videoPreviewSettings;
 
 	public Sprite play;
