@@ -220,14 +220,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   startPosition: {x: -2, y: 1}
   endPosition: {x: 2, y: 1}
-  waitStart: 0
   moveTime: 1
-  waitEnd: 1
   colorWait: 1
   colorStart: {r: 1, g: 0, b: 0, a: 1}
   colorEnd: {r: 0, g: 0, b: 1, a: 1}
   colorTransitionTime: 2
-  centerZoom: 1
 --- !u!1 &714502931
 GameObject:
   m_ObjectHideFlags: 0
@@ -353,7 +350,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fileCounter: 0
-  screenshotKey: 99
   saveLocation: VideoData
   saveName: CircleAnimation
   paddingDigits: 3
@@ -509,14 +505,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   startPosition: {x: -2, y: -1}
   endPosition: {x: 2, y: -1}
-  waitStart: 0
   moveTime: 2
-  waitEnd: 0
   colorWait: 2
   colorStart: {r: 0, g: 1, b: 0, a: 1}
   colorEnd: {r: 0, g: 1, b: 1, a: 1}
   colorTransitionTime: 1
-  centerZoom: 1
 --- !u!212 &1181664748
 SpriteRenderer:
   m_ObjectHideFlags: 0

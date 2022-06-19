@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// A game object that is controlled by actions
+/// </summary>
 public abstract class Element : MonoBehaviour
 {
 

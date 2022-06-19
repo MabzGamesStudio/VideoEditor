@@ -1,6 +1,9 @@
 using System;
 using UnityEngine;
 
+/// <summary>
+/// A path created by a y output as a function of x
+/// </summary>
 public abstract class Function : Path
 {
 

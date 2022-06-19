@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Highest overall manager of the control of the scene
+/// </summary>
 public class SceneManager : MonoBehaviour
 {
 

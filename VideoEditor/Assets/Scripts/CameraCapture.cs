@@ -1,6 +1,9 @@
 using System.IO;
 using UnityEngine;
 
+/// <summary>
+/// Captures image of screen and saves frame image to Asset folder
+/// </summary>
 public class CameraCapture : MonoBehaviour
 {
 

@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Diagnostics;
 
+/// <summary>
+/// Converts frames from within the Assets folder to mp4 video format
+/// </summary>
 public class AnimationComputer
 {
 

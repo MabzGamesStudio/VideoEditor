@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Manages the actions of all the elements
+/// </summary>
 public class ActionManager : MonoBehaviour
 {
 
@@ -83,6 +86,14 @@ public class ActionManager : MonoBehaviour
 	/// The speed to play the action
 	/// </summary>
 	private float playSpeed = 1f;
+
+	/// <summary>
+	/// Update elements every frame
+	/// </summary>
+	void Update()
+	{
+		UpdateElementsIfPlaying();
+	}
 
 	/// <summary>
 	/// Sets the elements for the complete action
@@ -207,14 +218,6 @@ public class ActionManager : MonoBehaviour
 	{
 		actionTime = TotalActionTime;
 		videoPreviewSettings.SetPreviewProgress(actionTime / TotalActionTime, TotalActionTime, TotalFrames);
-	}
-
-	/// <summary>
-	/// Update elements every frame
-	/// </summary>
-	void Update()
-	{
-		UpdateElementsIfPlaying();
 	}
 
 	/// <summary>

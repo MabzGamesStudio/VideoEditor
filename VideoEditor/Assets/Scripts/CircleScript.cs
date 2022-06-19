@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// A testing script to control a changing circle through actions
+/// </summary>
 public class CircleScript : Element
 {
 

@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Creates a path through x and y parametric functions as a function of t
+/// </summary>
 public class ParametricFunction : Path
 {
 
