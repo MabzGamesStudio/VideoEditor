@@ -363,7 +363,8 @@ public class VideoPreviewSettings : MonoBehaviour
 
 		// If the video is playing, then tell the action manager to update the
 		// speed
-		if (currentState == PlayState.Rewind || currentState == PlayState.Forward)
+		if (currentState == PlayState.Rewind ||
+			currentState == PlayState.Forward)
 		{
 			actionManager.SetPlaySpeed(speed);
 		}
@@ -496,7 +497,8 @@ public class VideoPreviewSettings : MonoBehaviour
 	/// <param name="progress">Progress of action from 0 to 1</param>
 	/// <param name="totalTime">Total time for action</param>
 	/// <param name="totalFrames">Total number of frames in action</param>
-	public void SetPreviewProgress(float progress, float totalTime, int totalFrames)
+	public void SetPreviewProgress(float progress, float totalTime,
+		int totalFrames)
 	{
 
 		// Update the slider to the correct progress position
@@ -507,7 +509,8 @@ public class VideoPreviewSettings : MonoBehaviour
 		endTimeTextScript.SetTotals(totalTime, totalFrames);
 
 		// Update the time value if in time mode
-		if (timeDisplay == TimeDisplay.Time || timeDisplay == TimeDisplay.TimeTotal)
+		if (timeDisplay == TimeDisplay.Time ||
+			timeDisplay == TimeDisplay.TimeTotal)
 		{
 			float seconds = progress * totalTime;
 			startTimeTextScript.UpdateTime(seconds, totalTime);
