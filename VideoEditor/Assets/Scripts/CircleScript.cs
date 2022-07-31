@@ -62,13 +62,13 @@ public class CircleScript : Element
 		zoomTransition = new ActionZoom()
 			.AddAction(new Vector2(1, 1),
 			new Vector2(2, 2),
-			new ConstantProgression(2),
-			new ConstantProgression(3),
-			new Vector2(.5f, .5f));
+			new ConstantProgression(1),
+			new ConstantProgression(1),
+			new Vector2(0, -.5f));
 
 		// Circle rotates half turn
 		rotateTransition = new ActionRotate()
-			.AddAction(0, 180, new ConstantProgression(1), new Vector2(0, 1f));
+			.AddAction(0, 180, new ConstantProgression(1), new Vector2(0, -.5f));
 	}
 
 }

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Diagnostics;
+using System.IO;
 
 /// <summary>
 /// Converts frames from within the Assets folder to mp4 video format

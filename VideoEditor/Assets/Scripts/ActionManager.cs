@@ -83,6 +83,12 @@ public class ActionManager : MonoBehaviour
 	public int megaBitrate;
 
 	/// <summary>
+	/// Deletes the image frames of the animation after the video has been
+	/// compiled from the frames
+	/// </summary>
+	public bool deleteCompiledFrames;
+
+	/// <summary>
 	/// The speed to play the action
 	/// </summary>
 	private float playSpeed = 1f;
@@ -157,6 +163,13 @@ public class ActionManager : MonoBehaviour
 		// Hides video preview to prevent it blocking the video
 		videoPreviewSettings.HidePreview();
 
+		// Deletes frames and video from previous save
+		cameraCapture.DeleteFrames();
+		cameraCapture.DeleteVideo();
+
+		// Resets file counter frame count to 0
+		cameraCapture.ResetFileCounter();
+
 		// Takes an image of from the camera of each frame in the action
 		for (int i = 0; i < TotalFrames; i++)
 		{
@@ -173,7 +186,14 @@ public class ActionManager : MonoBehaviour
 		}
 
 		// Compute video from frames captured
-		AnimationComputer.ComputeAnimation("VideoData", "CircleAnimation", frameDimensions, fps, TotalFrames, megaBitrate);
+		AnimationComputer.ComputeAnimation("VideoData", "CircleAnimation",
+			frameDimensions, fps, TotalFrames, megaBitrate);
+
+		// Delete the video frames when the video has been computed
+		if (deleteCompiledFrames)
+		{
+			cameraCapture.DeleteFrames();
+		}
 
 		// Show video preview settings
 		videoPreviewSettings.ShowPreview();

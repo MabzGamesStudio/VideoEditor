@@ -10,7 +10,7 @@ public class CameraCapture : MonoBehaviour
 	/// <summary>
 	/// The image counter (starts at 0 and goes to # of frames - 1)
 	/// </summary>
-	public int fileCounter;
+	private int fileCounter;
 
 	/// <summary>
 	/// The save location within the Asset folder
@@ -65,8 +65,10 @@ public class CameraCapture : MonoBehaviour
 		Camera.Render();
 
 		// Takes the camera capture and converts it to an image
-		Texture2D image = new Texture2D(Camera.targetTexture.width, Camera.targetTexture.height);
-		image.ReadPixels(new Rect(0, 0, Camera.targetTexture.width, Camera.targetTexture.height), 0, 0);
+		Texture2D image = new Texture2D(Camera.targetTexture.width,
+			Camera.targetTexture.height);
+		image.ReadPixels(new Rect(0, 0, Camera.targetTexture.width,
+			Camera.targetTexture.height), 0, 0);
 		image.Apply();
 		RenderTexture.active = activeRenderTexture;
 
@@ -83,16 +85,47 @@ public class CameraCapture : MonoBehaviour
 		paddedFileCounter += fileCounter.ToString();
 
 		// Writes the image data to the specified file path and name
-		File.WriteAllBytes(Application.dataPath + "/" + saveLocation + "/" + saveName + paddedFileCounter + ".png", bytes);
+		File.WriteAllBytes(Application.dataPath + "/" + saveLocation + "/" +
+			saveName + paddedFileCounter + ".png", bytes);
 		fileCounter++;
 	}
 
-	// TODO: Implement this to save space for frames when video has been created
 	/// <summary>
-	/// Deletes the image frame files
+	/// Deletes the frame files in the folder
 	/// </summary>
 	public void DeleteFrames()
 	{
-
+		string[] fileNames = Directory.GetFiles("Assets/" + saveLocation);
+		for (int i = 0; i < fileNames.Length; i++)
+		{
+			if (!fileNames[i].EndsWith(".mp4"))
+			{
+				File.Delete(fileNames[i]);
+			}
+		}
 	}
+
+	/// <summary>
+	/// Deletes the video files in the folder
+	/// </summary>
+	public void DeleteVideo()
+	{
+		string[] fileNames = Directory.GetFiles("Assets/" + saveLocation);
+		for (int i = 0; i < fileNames.Length; i++)
+		{
+			if (fileNames[i].EndsWith(".mp4"))
+			{
+				File.Delete(fileNames[i]);
+			}
+		}
+	}
+
+	/// <summary>
+	/// Resets the frame number file counter to 0
+	/// </summary>
+	public void ResetFileCounter()
+	{
+		fileCounter = 0;
+	}
+
 }

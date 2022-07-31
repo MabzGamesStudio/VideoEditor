@@ -47,6 +47,22 @@ public class TimeText : MonoBehaviour
 	private int framesTotal;
 
 	/// <summary>
+	/// On the start of the game init the text components
+	/// </summary>
+	private void Start()
+	{
+		InitText();
+	}
+
+	/// <summary>
+	/// Init the text component to the text component in children
+	/// </summary>
+	private void InitText()
+	{
+		text = GetComponentInChildren<TextMeshProUGUI>();
+	}
+
+	/// <summary>
 	/// Updates the type of time display
 	/// </summary>
 	/// <param name="timeDisplay">Type of time display to use</param>

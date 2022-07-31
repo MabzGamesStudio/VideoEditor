@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 /// <summary>
 /// A game object that is controlled by actions
@@ -34,6 +35,50 @@ public abstract class Element : MonoBehaviour
 	private bool elementInitialized;
 
 	/// <summary>
+	/// Whether the Action Color is for the sprite or text mesh
+	/// </summary>
+	public bool usingTextMesh;
+
+	/// <summary>
+	/// The number of transformation transitions used
+	/// </summary>
+	private int TransformationNumber
+	{
+		get
+		{
+
+			// Count the number of transformation transitions used
+			if (_transformationNumber == -1)
+			{
+				int count = 0;
+				if (movement != null)
+				{
+					count++;
+				}
+				if (zoomTransition != null)
+				{
+					count++;
+				}
+				if (rotateTransition != null)
+				{
+					count++;
+				}
+
+				// Set the transformation number
+				_transformationNumber = count;
+			}
+
+			// Return computed transformation number
+			return _transformationNumber;
+		}
+		set
+		{
+			_transformationNumber = value;
+		}
+	}
+	private int _transformationNumber = -1;
+
+	/// <summary>
 	/// The primary parent of the element to allow rotation/scaling from any
 	/// pivot position
 	/// </summary>
@@ -43,9 +88,7 @@ public abstract class Element : MonoBehaviour
 		{
 
 			// If there is at least two non-null transformations
-			if ((movement != null && zoomTransition != null) ||
-				(movement != null && rotateTransition != null) ||
-				(zoomTransition != null && rotateTransition != null))
+			if (TransformationNumber >= 1)
 			{
 				if (_parentA == null)
 				{
@@ -55,18 +98,27 @@ public abstract class Element : MonoBehaviour
 					_parentA.transform.localPosition = new Vector2(0, 0);
 					_parentA.transform.name = name + "ParentA";
 
-					// Set parent A to top of relative hierarchy
+					// Set parents hierarchy
 					Transform gameObjectParent = gameObject.transform.parent;
 					if (ParentB != null)
 					{
-						transform.parent = ParentB.transform;
-						ParentB.transform.parent = _parentA.transform;
-						_parentA.transform.parent = gameObjectParent;
+						if (ParentC != null)
+						{
+							transform.parent = ParentC.transform;
+							ParentC.transform.parent = ParentB.transform;
+							ParentB.transform.parent = _parentA.transform;
+							_parentA.transform.parent = gameObjectParent;
+						}
+						else
+						{
+							transform.parent = ParentB.transform;
+							ParentB.transform.parent = _parentA.transform;
+							_parentA.transform.parent = gameObjectParent;
+						}
 					}
 					else
 					{
-
-						transform.parent = ParentA.transform;
+						transform.parent = _parentA.transform;
 						_parentA.transform.parent = gameObjectParent;
 					}
 				}
@@ -91,11 +143,10 @@ public abstract class Element : MonoBehaviour
 		{
 
 			// If there are all three transformations
-			if (movement != null && zoomTransition != null &&
-				rotateTransition != null)
+			if (TransformationNumber >= 2)
 			{
 
-				// Create the parent B if not yet created
+				// Create the parent C if not yet created
 				if (_parentB == null)
 				{
 					_parentB = new GameObject();
@@ -114,6 +165,37 @@ public abstract class Element : MonoBehaviour
 	private GameObject _parentB;
 
 	/// <summary>
+	/// The tertiary parent of the element to allow rotation/scaling from any
+	/// pivot position
+	/// </summary>
+	private GameObject ParentC
+	{
+		get
+		{
+
+			// If there are all three transformations
+			if (TransformationNumber == 3)
+			{
+
+				// Create the parent C if not yet created
+				if (_parentC == null)
+				{
+					_parentC = new GameObject();
+					_parentC.transform.localPosition = new Vector2(0, 0);
+					_parentC.transform.name = name + "ParentC";
+				}
+				return _parentC;
+			}
+			return null;
+		}
+		set
+		{
+			_parentC = value;
+		}
+	}
+	private GameObject _parentC;
+
+	/// <summary>
 	/// The sprite renderer of the game object
 	/// </summary>
 	private SpriteRenderer SpriteRenderer
@@ -122,7 +204,7 @@ public abstract class Element : MonoBehaviour
 		{
 			if (_spriteRenderer == null)
 			{
-				_spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
+				_spriteRenderer = gameObject.GetComponentInChildren<SpriteRenderer>();
 			}
 			return _spriteRenderer;
 		}
@@ -132,6 +214,26 @@ public abstract class Element : MonoBehaviour
 		}
 	}
 	private SpriteRenderer _spriteRenderer;
+
+	/// <summary>
+	/// The text mesh of the game object
+	/// </summary>
+	private TextMeshProUGUI TextMesh
+	{
+		get
+		{
+			if (_textMesh == null)
+			{
+				_textMesh = gameObject.GetComponentInChildren<TextMeshProUGUI>();
+			}
+			return _textMesh;
+		}
+		set
+		{
+			_textMesh = value;
+		}
+	}
+	private TextMeshProUGUI _textMesh;
 
 	/// <summary>
 	/// The order for the scale, rotate, and movement transformation
@@ -197,11 +299,25 @@ public abstract class Element : MonoBehaviour
 		// Color init
 		if (colorTransition != null)
 		{
-			SpriteRenderer.color = colorTransition.GetElementColor(0f);
+			if (usingTextMesh)
+			{
+				TextMesh.color = colorTransition.GetElementColor(0f);
+			}
+			else
+			{
+				SpriteRenderer.color = colorTransition.GetElementColor(0f);
+			}
 		}
 		else
 		{
-			SpriteRenderer.color = Color.white;
+			if (usingTextMesh)
+			{
+				TextMesh.color = Color.white;
+			}
+			else
+			{
+				SpriteRenderer.color = Color.white;
+			}
 		}
 	}
 
@@ -217,7 +333,6 @@ public abstract class Element : MonoBehaviour
 		}
 	}
 
-	// TODO: Change this by adding a parent C to allow children to be correct
 	/// <summary>
 	/// Updates the element action based on the action time
 	/// </summary>
@@ -235,7 +350,7 @@ public abstract class Element : MonoBehaviour
 		Transform rotateChild = null;
 
 		// There are three transformations
-		if (ParentB != null)
+		if (TransformationNumber == 3)
 		{
 
 			// Move first
@@ -255,7 +370,7 @@ public abstract class Element : MonoBehaviour
 			// Move last
 			else
 			{
-				move = transform;
+				move = ParentC.transform;
 			}
 
 			// Zoom first
@@ -271,13 +386,14 @@ public abstract class Element : MonoBehaviour
 				transformOrder == TransformOrder.RotateZoomMove)
 			{
 				zoom = ParentB.transform;
-				zoomChild = transform;
+				zoomChild = ParentC.transform;
 			}
 
 			// Zoom last
 			else
 			{
-				zoom = transform;
+				zoom = ParentC.transform;
+				zoomChild = transform;
 			}
 
 			// Rotate first
@@ -293,18 +409,19 @@ public abstract class Element : MonoBehaviour
 				transformOrder == TransformOrder.ZoomRotateMove)
 			{
 				rotate = ParentB.transform;
-				rotateChild = transform;
+				rotateChild = ParentC.transform;
 			}
 
 			// Rotate last
 			else
 			{
-				rotate = transform;
+				rotate = ParentC.transform;
+				rotateChild = transform;
 			}
 		}
 
 		// There are two transformations
-		else if (ParentA != null)
+		else if (TransformationNumber == 2)
 		{
 
 			// No movement
@@ -317,16 +434,18 @@ public abstract class Element : MonoBehaviour
 					transformOrder == TransformOrder.MoveRotateZoom)
 				{
 					rotate = ParentA.transform;
-					rotateChild = transform;
-					zoom = transform;
+					rotateChild = ParentB.transform;
+					zoom = ParentB.transform;
+					zoomChild = transform;
 				}
 
 				// Zoom before rotate
 				else
 				{
 					zoom = ParentA.transform;
-					zoomChild = transform;
-					rotate = transform;
+					zoomChild = ParentB.transform;
+					rotate = ParentB.transform;
+					rotateChild = transform;
 				}
 			}
 
@@ -340,15 +459,16 @@ public abstract class Element : MonoBehaviour
 					transformOrder == TransformOrder.MoveZoomRotate)
 				{
 					move = ParentA.transform;
-					rotate = transform;
+					rotate = ParentB.transform;
+					rotateChild = transform;
 				}
 
 				// Rotate before move
 				else
 				{
 					rotate = ParentA.transform;
-					rotateChild = transform;
-					move = transform;
+					rotateChild = ParentB.transform;
+					move = ParentB.transform;
 				}
 			}
 
@@ -362,36 +482,40 @@ public abstract class Element : MonoBehaviour
 					transformOrder == TransformOrder.RotateZoomMove)
 				{
 					zoom = ParentA.transform;
-					zoomChild = transform;
-					move = transform;
+					zoomChild = ParentB.transform;
+					move = ParentB.transform;
 				}
 
 				// Move before zoom
 				else
 				{
-					zoom = ParentA.transform;
-					move = transform;
+					move = ParentA.transform;
+					zoom = ParentB.transform;
+					zoomChild = transform;
 				}
 			}
 		}
 
 		// There is one transformation
-		else
+		else if (TransformationNumber == 1)
 		{
 			if (movement != null)
 			{
-				move = transform;
+				move = ParentA.transform;
 			}
 			else if (zoomTransition != null)
 			{
-				zoom = transform;
+				zoom = ParentA.transform;
+				zoomChild = transform;
 			}
 			else if (rotateTransition != null)
 			{
-				rotate = transform;
+				rotate = ParentA.transform;
+				rotateChild = transform;
 			}
 		}
 
+		// TODO: Make transformations work!!!
 		// If there is a move action move the correct transformation and fix any
 		// problems with the pivot
 		if (move != null)
@@ -405,7 +529,8 @@ public abstract class Element : MonoBehaviour
 			if (zoomChild != null && move.GetInstanceID() == zoomChild.GetInstanceID())
 			{
 				Vector2 pivotPosition = zoomTransition.GetPivotPosition(actionTime);
-				move.localPosition += new Vector3(pivotPosition.x, pivotPosition.y, 0);
+				Vector2 pivotZoom = zoomTransition.GetElementSize(actionTime);
+				zoomChild.localPosition -= new Vector3(pivotPosition.x, pivotPosition.y, 0);
 			}
 
 			// If the move transformation is the child of the rotate,
@@ -413,7 +538,7 @@ public abstract class Element : MonoBehaviour
 			else if (rotateChild != null && move.GetInstanceID() == rotateChild.GetInstanceID())
 			{
 				Vector2 pivotPosition = rotateTransition.GetPivotPosition(actionTime);
-				move.localPosition += new Vector3(pivotPosition.x, pivotPosition.y, 0);
+				move.localPosition -= new Vector3(pivotPosition.x, pivotPosition.y, 0);
 			}
 		}
 
@@ -426,14 +551,14 @@ public abstract class Element : MonoBehaviour
 			zoom.localScale = zoomTransition.GetElementSize(actionTime);
 
 			// Move zoom transform by zoom pivot
-			zoom.localPosition = -zoomTransition.GetPivotPosition(actionTime);
+			zoom.localPosition = zoomTransition.GetPivotPosition(actionTime);
 
 			// If the zoom transformation is the child of the rotate,
 			// then offset the position by the rotate pivot
 			if (rotateChild != null && zoom.GetInstanceID() == rotateChild.GetInstanceID())
 			{
 				Vector2 pivotPosition = rotateTransition.GetPivotPosition(actionTime);
-				zoom.localPosition = new Vector3(pivotPosition.x, pivotPosition.y, 0);
+				zoom.localPosition -= new Vector3(pivotPosition.x, pivotPosition.y, 0);
 			}
 		}
 
@@ -448,21 +573,46 @@ public abstract class Element : MonoBehaviour
 			rotate.localRotation = rotationQuaternion;
 
 			// Move rotate transformation by rotate pivot
-			rotate.localPosition = -rotateTransition.GetPivotPosition(actionTime);
+			rotate.localPosition = rotateTransition.GetPivotPosition(actionTime);
 
 			// If the rotate transformation is the child of the zoom,
 			// then offset the position by the zoom pivot
 			if (zoomChild != null && rotate.GetInstanceID() == zoomChild.GetInstanceID())
 			{
 				Vector2 pivotPosition = zoomTransition.GetPivotPosition(actionTime);
-				rotate.localPosition = new Vector3(pivotPosition.x, pivotPosition.y, 0);
+				Vector2 pivotZoom = zoomTransition.GetElementSize(actionTime);
+				rotate.localPosition -= new Vector3(pivotPosition.x, pivotPosition.y, 0);
 			}
+		}
+
+		// If the element transformation is the child of the zoom,
+		// then offset the position by the zoom pivot
+		if (zoomChild != null && transform.GetInstanceID() == zoomChild.GetInstanceID())
+		{
+			Vector2 pivotPosition = zoomTransition.GetPivotPosition(actionTime);
+			Vector2 pivotZoom = zoomTransition.GetElementSize(actionTime);
+			transform.localPosition = -new Vector3(pivotPosition.x, pivotPosition.y, 0);
+		}
+
+		// If the element transformation is the child of the rotate,
+		// then offset the position by the rotate pivot
+		if (rotateChild != null && transform.GetInstanceID() == rotateChild.GetInstanceID())
+		{
+			Vector2 pivotPosition = rotateTransition.GetPivotPosition(actionTime);
+			transform.localPosition = -new Vector3(pivotPosition.x, pivotPosition.y, 0);
 		}
 
 		// If there is a color action, then set it
 		if (colorTransition != null)
 		{
-			SpriteRenderer.color = colorTransition.GetElementColor(actionTime);
+			if (usingTextMesh)
+			{
+				TextMesh.color = colorTransition.GetElementColor(actionTime);
+			}
+			else
+			{
+				SpriteRenderer.color = colorTransition.GetElementColor(actionTime);
+			}
 		}
 	}
 
