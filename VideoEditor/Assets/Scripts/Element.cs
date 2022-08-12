@@ -96,6 +96,7 @@ public abstract class Element : MonoBehaviour
 					// Create parent a game object
 					_parentA = new GameObject();
 					_parentA.transform.localPosition = new Vector2(0, 0);
+					_parentA.transform.localScale = new Vector2(1, 1);
 					_parentA.transform.name = name + "ParentA";
 
 					// Set parents hierarchy
@@ -151,6 +152,7 @@ public abstract class Element : MonoBehaviour
 				{
 					_parentB = new GameObject();
 					_parentB.transform.localPosition = new Vector2(0, 0);
+					_parentA.transform.localScale = new Vector2(1, 1);
 					_parentB.transform.name = name + "ParentB";
 				}
 				return _parentB;
@@ -182,6 +184,7 @@ public abstract class Element : MonoBehaviour
 				{
 					_parentC = new GameObject();
 					_parentC.transform.localPosition = new Vector2(0, 0);
+					_parentA.transform.localScale = new Vector2(1, 1);
 					_parentC.transform.name = name + "ParentC";
 				}
 				return _parentC;
@@ -245,6 +248,10 @@ public abstract class Element : MonoBehaviour
 	/// </summary>
 	public abstract void InitialElement();
 
+	/// <summary>
+	/// This executes before each update of the element
+	/// </summary>
+	protected virtual void PreElementUpdate(float time) { }
 
 	/// <summary>
 	/// Initializes the element and the actions of the element
@@ -264,36 +271,28 @@ public abstract class Element : MonoBehaviour
 		// Movement init
 		if (movement != null)
 		{
-			transform.localPosition = movement.GetElementPosition(0f);
-		}
-		else
-		{
-			transform.localPosition = new Vector2(0, 0);
+
+			// TODO: Fix
+			//transform.localPosition = movement.GetElementPosition(0f);
 		}
 
 		// Zoom init
 		if (zoomTransition != null)
 		{
-			transform.localScale = zoomTransition.GetElementSize(0f);
-		}
-		else
-		{
-			transform.localScale = new Vector2(1, 1);
+
+			// TODO: Fix
+			//transform.localScale = zoomTransition.GetElementSize(0f);
 		}
 
 		// Rotation init
 		if (rotateTransition != null)
 		{
-			Quaternion rotationQuaternion = new Quaternion();
-			rotationQuaternion.eulerAngles =
-				new Vector3(0, 0, rotateTransition.GetElementRotation(0f));
-			transform.localRotation = rotationQuaternion;
-		}
-		else
-		{
-			Quaternion rotationQuaternion = new Quaternion();
-			rotationQuaternion.eulerAngles = new Vector3(0, 0, 0);
-			transform.localRotation = rotationQuaternion;
+
+			// TODO: Fix
+			//Quaternion rotationQuaternion = new Quaternion();
+			//rotationQuaternion.eulerAngles =
+			//	new Vector3(0, 0, rotateTransition.GetElementRotation(0f));
+			//transform.localRotation = rotationQuaternion;
 		}
 
 		// Color init
@@ -306,17 +305,6 @@ public abstract class Element : MonoBehaviour
 			else
 			{
 				SpriteRenderer.color = colorTransition.GetElementColor(0f);
-			}
-		}
-		else
-		{
-			if (usingTextMesh)
-			{
-				TextMesh.color = Color.white;
-			}
-			else
-			{
-				SpriteRenderer.color = Color.white;
 			}
 		}
 	}
@@ -339,6 +327,9 @@ public abstract class Element : MonoBehaviour
 	/// <param name="actionTime">Time progression of the action</param>
 	public void UpdateElement(float actionTime)
 	{
+
+		// Changes for update before action
+		PreElementUpdate(actionTime);
 
 		// move, zoom, and rotate element parents are init to null
 		Transform move = null;
@@ -515,7 +506,6 @@ public abstract class Element : MonoBehaviour
 			}
 		}
 
-		// TODO: Make transformations work!!!
 		// If there is a move action move the correct transformation and fix any
 		// problems with the pivot
 		if (move != null)
@@ -620,7 +610,7 @@ public abstract class Element : MonoBehaviour
 	/// Gets the total time of the longest element action
 	/// </summary>
 	/// <returns>Total time for action</returns>
-	public float GetTotalActionTime()
+	public virtual float GetTotalActionTime()
 	{
 
 		// Initialize element if not already initialized

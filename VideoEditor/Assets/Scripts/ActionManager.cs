@@ -185,8 +185,12 @@ public class ActionManager : MonoBehaviour
 			videoTime += 1f / fps;
 		}
 
+		// The save name and location of the animation
+		string framesName = cameraCapture.saveName;
+		string pathName = cameraCapture.saveLocation;
+
 		// Compute video from frames captured
-		AnimationComputer.ComputeAnimation("VideoData", "CircleAnimation",
+		AnimationComputer.ComputeAnimation(pathName, framesName,
 			frameDimensions, fps, TotalFrames, megaBitrate);
 
 		// Delete the video frames when the video has been computed
