@@ -53,26 +53,37 @@ public class SceneManager : MonoBehaviour
 
 }
 
-
+/// <summary>
+/// Custom editor for the SceneManager
+/// </summary>
 [CustomEditor(typeof(SceneManager))]
 public class SceneManagerEditor : Editor
 {
 
+	/// <summary>
+	/// The scene manager script
+	/// </summary>
 	private SceneManager thisScript;
 
+	/// <summary>
+	/// When the editor is enabled instantiate the target
+	/// as the scene manager script
+	/// </summary>
 	void OnEnable()
 	{
 		thisScript = (SceneManager)target;
 	}
 
+	/// <summary>
+	/// Create an button to update the elements in the scene for the action
+	/// </summary>
 	public override void OnInspectorGUI()
 	{
-
-
 		base.OnInspectorGUI();
 		if (GUILayout.Button("Update Elements"))
 		{
 			thisScript.SetAllElements();
 		}
 	}
+
 }
