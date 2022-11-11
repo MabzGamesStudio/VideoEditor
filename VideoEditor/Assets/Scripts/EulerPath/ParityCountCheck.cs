@@ -65,6 +65,7 @@ public class ParityCountCheck : MonoBehaviour
 /// Editor of the parity count check
 /// </summary>
 [CustomEditor(typeof(ParityCountCheck))]
+[CanEditMultipleObjects]
 public class ParityCountCheckEditor : Editor
 {
 

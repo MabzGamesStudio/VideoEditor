@@ -229,6 +229,7 @@ public class StraightLineGraphEditor : Editor
 
 				// Create the edge and set its name and parent
 				GameObject addEdge = Instantiate(edgeElementPrefab);
+				edgeScripts[i] = addEdge.GetComponent<BasicLine>();
 				addEdge.transform.parent = alias.transform;
 				addEdge.name = "Edge (" + i + ")";
 

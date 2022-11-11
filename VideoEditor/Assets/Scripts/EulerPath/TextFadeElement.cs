@@ -9,14 +9,24 @@ public class TextFadeElement : Element
 {
 
 	/// <summary>
-	/// Time for element to fade into existence
-	/// </summary>
-	public float fadeTime;
-
-	/// <summary>
 	/// Wait time before fading into existence
 	/// </summary>
 	public float waitTime;
+
+	/// <summary>
+	/// Time for element to fade into existence
+	/// </summary>
+	public float fadeInTime;
+
+	/// <summary>
+	/// Time between fade in and fade out
+	/// </summary>
+	public float intermediateTime;
+
+	/// <summary>
+	/// Time for element to fade out of existence, if -1 then no fade out
+	/// </summary>
+	public float fadeOutTime;
 
 	/// <summary>
 	/// Distance the text shifts up while fading in
@@ -51,17 +61,43 @@ public class TextFadeElement : Element
 			.AddAction(new LinearPath(
 				new Vector2(0, -shiftAmount),
 				new Vector2(0, 0)),
-				new EaseInOut(fadeTime / 2, fadeTime));
+				new EaseInOut(fadeInTime / 2, fadeInTime));
+
+		// Wait then move back if desired
+		if (fadeOutTime != -1)
+		{
+			movement
+				.AddAction(new StillPath(
+				new Vector2(0, 0)),
+				new ConstantProgression(intermediateTime))
+				.AddAction(new LinearPath(
+				new Vector2(0, 0),
+				new Vector2(0, -shiftAmount)),
+				new EaseInOut(fadeOutTime / 2, fadeOutTime));
+		}
 
 		// Text waits then fades into color
 		colorTransition = new ActionColor()
-			.AddAction(
-			transparent,
-			waitTime + fadeTime / 2)
-			.AddAction(
-			transparent,
-			textColor,
-			new ConstantProgression(fadeTime / 2));
+		.AddAction(
+		transparent,
+		waitTime + fadeInTime / 2)
+		.AddAction(
+		transparent,
+		textColor,
+		new ConstantProgression(fadeInTime / 2));
+
+		// Wait then change back to trasparent if desired
+		if (fadeOutTime != -1)
+		{
+			colorTransition
+				.AddAction(
+				textColor,
+				intermediateTime)
+				.AddAction(
+				textColor,
+				transparent,
+				new ConstantProgression(fadeOutTime / 2));
+		}
 	}
 
 }
