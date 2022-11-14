@@ -13,5 +13,6 @@ a video editor software to construct animations and visualizations using Unity (
 at your own risk. I had only intended this project for personal use, but I made this public in the case that someone was interested or found it useful. Having said that, I'm not familiar with how others could upload this project to their own computer. I use the Unity engine alongside the Text Mesh Pro library and the FFmpeg algorithm to create the video, so given this information if you are able to figure out how to download these things correctly and implement them then feel free to use and share this project as you please.
 
 <p align="center">
-<img src="GraphDegreeCount.gif" width="50%" class="center"/>
+<img src="VideoEditorPreview.png" width="45%" class="center"/>
+<img src="GraphDegreeCount.gif" width="45%" class="center"/>
 </p>
