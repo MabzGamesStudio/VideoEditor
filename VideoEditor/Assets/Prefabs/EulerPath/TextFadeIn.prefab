@@ -99,7 +99,7 @@ Canvas:
   m_GameObject: {fileID: 636776749348469863}
   m_Enabled: 1
   serializedVersion: 3
-  m_RenderMode: 1
+  m_RenderMode: 2
   m_Camera: {fileID: 0}
   m_PlaneDistance: 100
   m_PixelPerfect: 0
@@ -108,7 +108,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 25
-  m_SortingLayerID: -1311267085
+  m_SortingLayerID: 1864629739
   m_SortingOrder: 0
   m_TargetDisplay: 0
 --- !u!114 &636776749348469861
@@ -133,7 +133,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 0
+  m_PresetInfoIsWorld: 1
 --- !u!114 &636776749348469860
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -299,7 +299,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   usingTextMesh: 1
-  fadeTime: 0.5
   waitTime: 0.5
+  fadeInTime: 0
+  intermediateTime: 0
+  fadeOutTime: 0
   shiftAmount: 200
   textColor: {r: 1, g: 1, b: 1, a: 1}

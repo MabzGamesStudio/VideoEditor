@@ -107,7 +107,7 @@ public class BasicLine : Element
 	/// <param name="startPoint">Start position of the line</param>
 	/// <param name="endPoint">End position of the line</param>
 	/// <returns>Angle of the line in degrees</returns>
-	private float GetAngle(Vector2 startPoint, Vector2 endPoint)
+	public float GetAngle(Vector2 startPoint, Vector2 endPoint)
 	{
 
 		// If the angle is straight up/down, that angle is returned directly
@@ -138,7 +138,7 @@ public class BasicLine : Element
 	/// <param name="startPoint">Start position of the line</param>
 	/// <param name="endPoint">End position of the line</param>
 	/// <returns>The length of the given line</returns>
-	private float GetLength(Vector2 startPoint, Vector2 endPoint)
+	public float GetLength(Vector2 startPoint, Vector2 endPoint)
 	{
 		return Mathf.Sqrt(Mathf.Pow(startPoint.x - endPoint.x, 2) + Mathf.Pow(startPoint.y - endPoint.y, 2));
 	}
@@ -149,7 +149,7 @@ public class BasicLine : Element
 	/// <param name="startPoint">Start position of the line</param>
 	/// <param name="endPoint">End position of the line</param>
 	/// <returns>The center position of the line</returns>
-	private Vector2 GetPosition(Vector2 startPoint, Vector2 endPoint)
+	public Vector2 GetPosition(Vector2 startPoint, Vector2 endPoint)
 	{
 		return new Vector2((startPoint.x + endPoint.x) / 2, (startPoint.y + endPoint.y) / 2);
 	}
@@ -234,6 +234,29 @@ public class BasicLineEditor : Editor
 		if (GUILayout.Button("Update Line"))
 		{
 			thisScript.SetFullLine();
+		}
+
+		// Button sets the inspector information to the current angle and position
+		if (GUILayout.Button("Update Info"))
+		{
+
+			// Gets the position, angle, and length of the line
+			Vector2 position = new Vector2(
+				thisScript.transform.localPosition.x,
+				thisScript.transform.localPosition.y);
+			float length = thisScript.transform.localScale.x;
+			float angle = thisScript.transform.localEulerAngles.z * Mathf.PI / 180f;
+
+			// Trig to calculate the line start and end points
+			thisScript.start = new Vector2(
+				Mathf.Round(1000 * (position.x + length / 2f * Mathf.Cos(angle))) / 1000f,
+				Mathf.Round(1000 * (position.y + length / 2f * Mathf.Sin(angle))) / 1000f);
+			thisScript.end = new Vector2(
+				Mathf.Round(1000 * (position.x - length / 2f * Mathf.Cos(angle))) / 1000f,
+				Mathf.Round(1000 * (position.y - length / 2f * Mathf.Sin(angle))) / 1000f);
+
+			// Sets the width value to the scale width
+			thisScript.width = thisScript.transform.localScale.y;
 		}
 
 		// Button swaps the start and end points of the line

@@ -411,8 +411,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb9129417126543889c927d17c45dd77, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  saveLocation: VideoData/EulerPath/Path1f
-  saveName: GraphTypes
+  saveLocation: VideoData/EulerPath/5Room1a
+  saveName: NodeCount
   paddingDigits: 3
 --- !u!20 &987373238
 Camera:
@@ -469,7 +469,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1031226758
 GameObject:
@@ -665,8 +665,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 67a7d8a9679334de4bb8cf1bbfafe4c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animationElements:
-  - {fileID: 0}
+  animationElements: []
   elementsParent: {fileID: 0}
 --- !u!4 &1055038772
 Transform:
@@ -1460,7 +1459,7 @@ PrefabInstance:
       objectReference: {fileID: 1055038773}
     - target: {fileID: 4447238718705815039, guid: 789c277ad927b438bb8dc2248fe1f984, type: 3}
       propertyPath: m_RootOrder
-      value: 3
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 4447238718705815039, guid: 789c277ad927b438bb8dc2248fe1f984, type: 3}
       propertyPath: m_LocalPosition.x
